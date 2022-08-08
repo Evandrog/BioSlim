@@ -35,87 +35,9 @@ $app->addRoutingMiddleware();
 $app->add(new BasePathMiddleware($app));
 $app->addErrorMiddleware(true, true, true);
 
-$app->get('/', function (Request $request, Response $response) {
-   $response->getBody()->write('Hello World!');
-   return $response;
-});
-
-$app->get('/operacoes', function (Request $request, Response $response, $args) {
-  $operacoes = [
-      '1' => 'deposito',
-      '2' => 'saldo',
-      '3' => 'saque',
-  ];
-  $response->getBody()->write(json_encode($operacoes));
-  return $response->withHeader('Content-type', 'application/json');
-});
-$app->get('/operacoes/{id}', function (Request $request, Response $response, $args) {
-  $operacoes = [
-      '1' => 'deposito',
-      '2' => 'saldo',
-      '3' => 'saque',
-  ];
-  $operacao[$args['id']] = $operacoes[$args['id']];
-  $response->getBody()->write(json_encode($operacao));
-  
-  return $response->withHeader('Content-type', 'application/json');
-});
-
-
-// Trazendo dados do banco.
-$app->get('/operacoes/{id}/deposito/', function (Request $request, Response $response) {
-    $sql = "SELECT * FROM deposito";
-   
-    try {
-      $db = new DB();
-      $conn = $db->connect();
-      $stmt = $conn->query($sql);
-      $deposito = $stmt->fetchAll(PDO::FETCH_OBJ);
-      $db = null;
-     
-      $response->getBody()->write(json_encode($deposito));
-      return $response
-        ->withHeader('content-type', 'application/json')
-        ->withStatus(200);
-    } catch (PDOException $e) {
-      $error = array(
-        "message" => $e->getMessage()
-      );
-   
-      $response->getBody()->write(json_encode($error));
-      return $response
-        ->withHeader('content-type', 'application/json')
-        ->withStatus(500);
-    }
-   });
-
-   $app->get('/operacoes/{id}/saldo/', function (Request $request, Response $response) {
-    $sql = "SELECT * FROM saldo";
-   
-    try {
-      $db = new DB();
-      $conn = $db->connect();
-      $stmt = $conn->query($sql);
-      $saldo = $stmt->fetchAll(PDO::FETCH_OBJ);
-      $db = null;
-     
-      $response->getBody()->write(json_encode($saldo));
-      return $response
-        ->withHeader('content-type', 'application/json')
-        ->withStatus(200);
-    } catch (PDOException $e) {
-      $error = array(
-        "message" => $e->getMessage()
-      );
-   
-      $response->getBody()->write(json_encode($error));
-      return $response
-        ->withHeader('content-type', 'application/json')
-        ->withStatus(500);
-    }
-   });
-
-   $app->get('/operacoes/{id}/saque/', function (Request $request, Response $response) {
+  //  Operações no banco:
+  // Saque  
+  $app->get('/saque', function (Request $request, Response $response) {
     $sql = "SELECT * FROM saque";
    
     try {
@@ -140,5 +62,166 @@ $app->get('/operacoes/{id}/deposito/', function (Request $request, Response $res
         ->withStatus(500);
     }
    });
+
+  //  Saque por conta
+   $app->get('/saque/{conta}', function (Request $request, Response $response) {
+    $conta = $request->getAttribute('conta');
+    $sql = "SELECT * FROM saque Where conta = $conta";
+   
+    try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt = $conn->query($sql);
+      $saque = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $db = null;
+     
+      $response->getBody()->write(json_encode($saque));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+    } catch (PDOException $e) {
+      $error = array(
+        "message" => $e->getMessage()
+      );
+   
+      $response->getBody()->write(json_encode($error));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(500);
+    }
+   });
+
+     // Deposito  
+  $app->get('/deposito', function (Request $request, Response $response) {
+    $sql = "SELECT * FROM deposito";
+   
+    try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt = $conn->query($sql);
+      $saque = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $db = null;
+     
+      $response->getBody()->write(json_encode($saque));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+    } catch (PDOException $e) {
+      $error = array(
+        "message" => $e->getMessage()
+      );
+   
+      $response->getBody()->write(json_encode($error));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(500);
+    }
+   });
+
+  //  Deposito por conta
+   $app->get('/deposito/{conta}', function (Request $request, Response $response) {
+    $conta = $request->getAttribute('conta');
+    $sql = "SELECT * FROM deposito Where conta = $conta";
+   
+    try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt = $conn->query($sql);
+      $saque = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $db = null;
+     
+      $response->getBody()->write(json_encode($saque));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+    } catch (PDOException $e) {
+      $error = array(
+        "message" => $e->getMessage()
+      );
+   
+      $response->getBody()->write(json_encode($error));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(500);
+    }
+   });
+
+        // Saldo  
+  $app->get('/saldo', function (Request $request, Response $response) {
+    $sql = "SELECT * FROM saldo";
+   
+    try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt = $conn->query($sql);
+      $saque = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $db = null;
+     
+      $response->getBody()->write(json_encode($saque));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+    } catch (PDOException $e) {
+      $error = array(
+        "message" => $e->getMessage()
+      );
+   
+      $response->getBody()->write(json_encode($error));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(500);
+    }
+   });
+
+  //  Saldo por conta
+   $app->get('/saldo/{conta}', function (Request $request, Response $response) {
+    $conta = $request->getAttribute('conta');
+    $sql = "SELECT * FROM saldo Where conta = $conta";
+   
+    try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt = $conn->query($sql);
+      $saque = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $db = null;
+     
+      $response->getBody()->write(json_encode($saque));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+    } catch (PDOException $e) {
+      $error = array(
+        "message" => $e->getMessage()
+      );
+   
+      $response->getBody()->write(json_encode($error));
+      return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(500);
+    }
+   });
+
+// inserir deposito
+
+$app->post('/deposito-add/{conta}/{valor}/{moeda}', function (Request $request) {
+  $dep = json_decode($request->getBody());
+         
+  $sql = "INSERT INTO deposito (conta, valor, moeda) VALUES (:conta, :valor, :moeda)";
+  try {
+      $db = new DB();
+      $conn = $db->connect();
+      $stmt->bindParam("conta", $dep->conta);
+      $stmt->bindParam("valor", $dep->valor);
+      $stmt->bindParam("moeda", $dep->moeda);
+      $stmt = $conn->query($sql);
+      $stmt->execute();
+      $deposito = $stmt->fetchAll(PDO::FETCH_OBJ);
+      $dep->id = $db->lastInsertId();
+      $db = null;
+      echo json_encode($dep);
+  } catch(PDOException $e) {
+      echo '{"error":{"text":'. $e->getMessage() .'}}';
+  }
+});
 
 $app->run();
